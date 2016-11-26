@@ -17,6 +17,7 @@
 package com.rahuljanagouda.android.sunshine.app.gcm;
 
 import android.content.Intent;
+
 import com.google.android.gms.iid.InstanceIDListenerService;
 
 public class MyInstanceIDListenerService extends InstanceIDListenerService {

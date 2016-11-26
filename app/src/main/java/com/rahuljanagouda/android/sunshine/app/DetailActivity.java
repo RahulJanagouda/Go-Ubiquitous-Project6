@@ -30,14 +30,14 @@ public class DetailActivity extends AppCompatActivity {
             // using a fragment transaction.
 
             Bundle arguments = new Bundle();
-            arguments.putParcelable(com.rahuljanagouda.android.sunshine.app.DetailFragment.DETAIL_URI, getIntent().getData());
-            arguments.putBoolean(com.rahuljanagouda.android.sunshine.app.DetailFragment.DETAIL_TRANSITION_ANIMATION, true);
+            arguments.putParcelable(DetailFragment.DETAIL_URI, getIntent().getData());
+            arguments.putBoolean(DetailFragment.DETAIL_TRANSITION_ANIMATION, true);
 
-            com.rahuljanagouda.android.sunshine.app.DetailFragment fragment = new DetailFragment();
+            DetailFragment fragment = new DetailFragment();
             fragment.setArguments(arguments);
 
             getSupportFragmentManager().beginTransaction()
-                    .add(com.rahuljanagouda.android.sunshine.app.R.id.weather_detail_container, fragment)
+                    .add(R.id.weather_detail_container, fragment)
                     .commit();
 
             // Being here means we are in animation mode

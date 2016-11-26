@@ -19,12 +19,12 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 
+import com.google.android.apps.muzei.api.Artwork;
+import com.google.android.apps.muzei.api.MuzeiArtSource;
 import com.rahuljanagouda.android.sunshine.app.MainActivity;
 import com.rahuljanagouda.android.sunshine.app.Utility;
 import com.rahuljanagouda.android.sunshine.app.data.WeatherContract;
 import com.rahuljanagouda.android.sunshine.app.sync.SunshineSyncAdapter;
-import com.google.android.apps.muzei.api.Artwork;
-import com.google.android.apps.muzei.api.MuzeiArtSource;
 
 /**
  * Muzei source that changes your background based on the current weather conditions

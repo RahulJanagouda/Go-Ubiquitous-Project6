@@ -53,15 +53,18 @@ import com.rahuljanagouda.android.sunshine.app.sync.SunshineSyncAdapter;
  */
 public class ForecastFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>, SharedPreferences.OnSharedPreferenceChangeListener {
     public static final String LOG_TAG = ForecastFragment.class.getSimpleName();
-    private ForecastAdapter mForecastAdapter;
-    private RecyclerView mRecyclerView;
-    private boolean mUseTodayLayout, mAutoSelectView;
-    private int mChoiceMode;
-    private boolean mHoldForTransition;
-    private long mInitialSelectedDate = -1;
-
+    // These indices are tied to FORECAST_COLUMNS.  If FORECAST_COLUMNS changes, these
+    // must change.
+    static final int COL_WEATHER_ID = 0;
+    static final int COL_WEATHER_DATE = 1;
+    static final int COL_WEATHER_DESC = 2;
+    static final int COL_WEATHER_MAX_TEMP = 3;
+    static final int COL_WEATHER_MIN_TEMP = 4;
+    static final int COL_LOCATION_SETTING = 5;
+    static final int COL_WEATHER_CONDITION_ID = 6;
+    static final int COL_COORD_LAT = 7;
+    static final int COL_COORD_LONG = 8;
     private static final String SELECTED_KEY = "selected_position";
-
     private static final int FORECAST_LOADER = 0;
     // For the forecast view we're showing only a small subset of the stored data.
     // Specify the columns we need.
@@ -82,30 +85,12 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
             WeatherContract.LocationEntry.COLUMN_COORD_LAT,
             WeatherContract.LocationEntry.COLUMN_COORD_LONG
     };
-
-    // These indices are tied to FORECAST_COLUMNS.  If FORECAST_COLUMNS changes, these
-    // must change.
-    static final int COL_WEATHER_ID = 0;
-    static final int COL_WEATHER_DATE = 1;
-    static final int COL_WEATHER_DESC = 2;
-    static final int COL_WEATHER_MAX_TEMP = 3;
-    static final int COL_WEATHER_MIN_TEMP = 4;
-    static final int COL_LOCATION_SETTING = 5;
-    static final int COL_WEATHER_CONDITION_ID = 6;
-    static final int COL_COORD_LAT = 7;
-    static final int COL_COORD_LONG = 8;
-
-    /**
-     * A callback interface that all activities containing this fragment must
-     * implement. This mechanism allows activities to be notified of item
-     * selections.
-     */
-    public interface Callback {
-        /**
-         * DetailFragmentCallback for when an item has been selected.
-         */
-        public void onItemSelected(Uri dateUri, ForecastAdapter.ForecastAdapterViewHolder vh);
-    }
+    private ForecastAdapter mForecastAdapter;
+    private RecyclerView mRecyclerView;
+    private boolean mUseTodayLayout, mAutoSelectView;
+    private int mChoiceMode;
+    private boolean mHoldForTransition;
+    private long mInitialSelectedDate = -1;
 
     public ForecastFragment() {
     }
@@ -133,7 +118,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(com.rahuljanagouda.android.sunshine.app.R.menu.forecastfragment, menu);
+        inflater.inflate(R.menu.forecastfragment, menu);
     }
 
     @Override
@@ -146,7 +131,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
 //            updateWeather();
 //            return true;
 //        }
-        if (id == com.rahuljanagouda.android.sunshine.app.R.id.action_map) {
+        if (id == R.id.action_map) {
             openPreferredLocationInMap();
             return true;
         }
@@ -157,11 +142,11 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     @Override
     public void onInflate(Activity activity, AttributeSet attrs, Bundle savedInstanceState) {
         super.onInflate(activity, attrs, savedInstanceState);
-        TypedArray a = activity.obtainStyledAttributes(attrs, com.rahuljanagouda.android.sunshine.app.R.styleable.ForecastFragment,
+        TypedArray a = activity.obtainStyledAttributes(attrs, R.styleable.ForecastFragment,
                 0, 0);
-        mChoiceMode = a.getInt(com.rahuljanagouda.android.sunshine.app.R.styleable.ForecastFragment_android_choiceMode, AbsListView.CHOICE_MODE_NONE);
-        mAutoSelectView = a.getBoolean(com.rahuljanagouda.android.sunshine.app.R.styleable.ForecastFragment_autoSelectView, false);
-        mHoldForTransition = a.getBoolean(com.rahuljanagouda.android.sunshine.app.R.styleable.ForecastFragment_sharedElementTransitions, false);
+        mChoiceMode = a.getInt(R.styleable.ForecastFragment_android_choiceMode, AbsListView.CHOICE_MODE_NONE);
+        mAutoSelectView = a.getBoolean(R.styleable.ForecastFragment_autoSelectView, false);
+        mHoldForTransition = a.getBoolean(R.styleable.ForecastFragment_sharedElementTransitions, false);
         a.recycle();
     }
 
@@ -170,14 +155,14 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
                              Bundle savedInstanceState) {
 
 
-        View rootView = inflater.inflate(com.rahuljanagouda.android.sunshine.app.R.layout.fragment_main, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
         // Get a reference to the RecyclerView, and attach this adapter to it.
-        mRecyclerView = (RecyclerView) rootView.findViewById(com.rahuljanagouda.android.sunshine.app.R.id.recyclerview_forecast);
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerview_forecast);
 
         // Set the layout manager
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        View emptyView = rootView.findViewById(com.rahuljanagouda.android.sunshine.app.R.id.recyclerview_forecast_empty);
+        View emptyView = rootView.findViewById(R.id.recyclerview_forecast_empty);
 
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
@@ -191,7 +176,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
                 String locationSetting = Utility.getPreferredLocation(getActivity());
                 ((Callback) getActivity())
                         .onItemSelected(WeatherContract.WeatherEntry.buildWeatherLocationWithDate(
-                                        locationSetting, date),
+                                locationSetting, date),
                                 vh
                         );
             }
@@ -200,7 +185,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
         // specify an adapter (see also next example)
         mRecyclerView.setAdapter(mForecastAdapter);
 
-        final View parallaxView = rootView.findViewById(com.rahuljanagouda.android.sunshine.app.R.id.parallax_bar);
+        final View parallaxView = rootView.findViewById(R.id.parallax_bar);
         if (null != parallaxView) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
                 mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -219,7 +204,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
             }
         }
 
-        final AppBarLayout appbarView = (AppBarLayout)rootView.findViewById(com.rahuljanagouda.android.sunshine.app.R.id.appbar);
+        final AppBarLayout appbarView = (AppBarLayout) rootView.findViewById(R.id.appbar);
         if (null != appbarView) {
             ViewCompat.setElevation(appbarView, 0);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -256,7 +241,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
         // We hold for transition here just in-case the activity
         // needs to be re-created. In a standard return transition,
         // this doesn't actually make a difference.
-        if ( mHoldForTransition ) {
+        if (mHoldForTransition) {
             getActivity().supportPostponeEnterTransition();
         }
         getLoaderManager().initLoader(FORECAST_LOADER, null, this);
@@ -300,7 +285,6 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
         super.onSaveInstanceState(outState);
     }
 
-
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
         // This is called when a new Loader needs to be created.  This
@@ -328,7 +312,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         mForecastAdapter.swapCursor(data);
         updateEmptyView();
-        if ( data.getCount() == 0 ) {
+        if (data.getCount() == 0) {
             getActivity().supportStartPostponedEnterTransition();
         } else {
             mRecyclerView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
@@ -344,9 +328,9 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
                             Cursor data = mForecastAdapter.getCursor();
                             int count = data.getCount();
                             int dateColumn = data.getColumnIndex(WeatherContract.WeatherEntry.COLUMN_DATE);
-                            for ( int i = 0; i < count; i++ ) {
+                            for (int i = 0; i < count; i++) {
                                 data.moveToPosition(i);
-                                if ( data.getLong(dateColumn) == mInitialSelectedDate ) {
+                                if (data.getLong(dateColumn) == mInitialSelectedDate) {
                                     position = i;
                                     break;
                                 }
@@ -360,7 +344,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
                         if (null != vh && mAutoSelectView) {
                             mForecastAdapter.selectView(vh);
                         }
-                        if ( mHoldForTransition ) {
+                        if (mHoldForTransition) {
                             getActivity().supportStartPostponedEnterTransition();
                         }
                         return true;
@@ -371,8 +355,6 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
         }
 
     }
-
-
 
     @Override
     public void onDestroy() {
@@ -403,25 +385,25 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
         use to determine why they aren't seeing weather.
      */
     private void updateEmptyView() {
-        if ( mForecastAdapter.getItemCount() == 0 ) {
-            TextView tv = (TextView) getView().findViewById(com.rahuljanagouda.android.sunshine.app.R.id.recyclerview_forecast_empty);
-            if ( null != tv ) {
+        if (mForecastAdapter.getItemCount() == 0) {
+            TextView tv = (TextView) getView().findViewById(R.id.recyclerview_forecast_empty);
+            if (null != tv) {
                 // if cursor is empty, why? do we have an invalid location
-                int message = com.rahuljanagouda.android.sunshine.app.R.string.empty_forecast_list;
+                int message = R.string.empty_forecast_list;
                 @SunshineSyncAdapter.LocationStatus int location = Utility.getLocationStatus(getActivity());
                 switch (location) {
                     case SunshineSyncAdapter.LOCATION_STATUS_SERVER_DOWN:
-                        message = com.rahuljanagouda.android.sunshine.app.R.string.empty_forecast_list_server_down;
+                        message = R.string.empty_forecast_list_server_down;
                         break;
                     case SunshineSyncAdapter.LOCATION_STATUS_SERVER_INVALID:
-                        message = com.rahuljanagouda.android.sunshine.app.R.string.empty_forecast_list_server_error;
+                        message = R.string.empty_forecast_list_server_error;
                         break;
                     case SunshineSyncAdapter.LOCATION_STATUS_INVALID:
-                        message = com.rahuljanagouda.android.sunshine.app.R.string.empty_forecast_list_invalid_location;
+                        message = R.string.empty_forecast_list_invalid_location;
                         break;
                     default:
                         if (!Utility.isNetworkAvailable(getActivity())) {
-                            message = com.rahuljanagouda.android.sunshine.app.R.string.empty_forecast_list_no_network;
+                            message = R.string.empty_forecast_list_no_network;
                         }
                 }
                 tv.setText(message);
@@ -431,8 +413,20 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if (key.equals(getString(com.rahuljanagouda.android.sunshine.app.R.string.pref_location_status_key))) {
+        if (key.equals(getString(R.string.pref_location_status_key))) {
             updateEmptyView();
         }
+    }
+
+    /**
+     * A callback interface that all activities containing this fragment must
+     * implement. This mechanism allows activities to be notified of item
+     * selections.
+     */
+    public interface Callback {
+        /**
+         * DetailFragmentCallback for when an item has been selected.
+         */
+        public void onItemSelected(Uri dateUri, ForecastAdapter.ForecastAdapterViewHolder vh);
     }
 }
