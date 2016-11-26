@@ -134,7 +134,7 @@
     <string name="format_humidity"><xliff:g id="humidity">%1.0f</xliff:g> %%</string>
 
     <!-- SyncAdapter related -->
-    <string name="sync_account_type">sunshine.example.com</string>
+    <string name="sync_account_type">sunshine.rahuljanagouda.com</string>
     <string name="content_authority">com.rahuljanagouda.android.sunshine.app</string>
 
     <!-- Notification Format -->
