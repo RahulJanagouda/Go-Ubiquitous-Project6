@@ -22,6 +22,47 @@ Getting Started
 This sample uses the Gradle build system.  To build this project, use the
 "gradlew build" command or use "Import Project" in Android Studio.
 
+
+
+Supporting Courses
+---------------
+You should have the skills you need to complete this app after completing:
+
+* Developing Android Apps
+* Advanced Android App Development
+* Android Ubiquitous Computing
+
+Required Tasks
+---------------
+Clone/Download a zip file of the final branch of Sunshine from Advanced Android App Development.
+Spend time exploring the samples built into Android Studio, looking for ways to incorporate that functionality into an Android Wear watchface.
+
+Design Mocks
+Feel free to use the following square and round designs as a design reference.
+
+Square
+------
+
+<img src="https://lh3.googleusercontent.com/bb5NXi9Vq-Lt4WsApGwWPJbb2TTa-5EFUA_O5q6Ki2Jh_tAzmFX14sOrhzKsfipKsI8yB003dNxgkemdAUFB=s0#w=280&h=280" width="25%" />
+
+
+Round
+------
+
+<img src="https://lh3.googleusercontent.com/Hy5VR-7Rsz6RAD_5ylXHQ6EzLZCg1DObOGWe7CUtdSNImh9yBT0CSLaOcusQyGXwJOYgiIDJvIi44pwWKQHr=s0#w=280&h=280" width="25%" />
+
+
+But certainly feel free to customize and create per your own taste and preferences! We're looking forward to seeing what you create!
+
+#Rubric
+-------
+* App works on both round and square face watches.
+* App displays the current time.
+* App displays the high and low temperatures.
+* App displays a graphic that summarizes the day’s weather (e.g., a sunny image, rainy image, cloudy image, etc.).
+* Watch face obtains weather data by talking with a copy of Sunshine running on a device paired to the watch.
+* App conforms to common standards found in the Android Nanodegree General Project Guidelines.
+
 Support
 -------
 
