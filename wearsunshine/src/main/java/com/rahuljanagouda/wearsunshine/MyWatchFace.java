@@ -227,24 +227,27 @@ public class MyWatchFace extends CanvasWatchFaceService {
         public void onDataChanged(DataEventBuffer dataEventBuffer) {
             Log.d(LOG_TAG, "Weather data has been changed!");
             for (DataEvent event : dataEventBuffer) {
-                DataItem item = event.getDataItem();
-                if (WEATHER_DATA_PATH.equals(item.getUri().getPath())) {
-                    DataMap dataMap = DataMapItem.fromDataItem(item).getDataMap();
-                    double high = dataMap.getDouble(WEATHER_DATA_HIGH);
-                    double low = dataMap.getDouble(WEATHER_DATA_LOW);
-                    long id = dataMap.getLong(WEATHER_DATA_ID);
+                if(event.getType() == DataEvent.TYPE_CHANGED) {
+                    DataItem item = event.getDataItem();
+                    if (WEATHER_DATA_PATH.equals(item.getUri().getPath())) {
+                        DataMap dataMap = DataMapItem.fromDataItem(item).getDataMap();
+                        double high = dataMap.getDouble(WEATHER_DATA_HIGH);
+                        double low = dataMap.getDouble(WEATHER_DATA_LOW);
+                        long id = dataMap.getLong(WEATHER_DATA_ID);
 
-                    mWeather = (int) Math.round(high) + "/" + (int) Math.round(low);
-                    mWeatherId = (int) id;
+                        mWeather = (int) Math.round(high) + "/" + (int) Math.round(low);
+                        mWeatherId = (int) id;
 
-                    loadIconForWeatherId();
+                        loadIconForWeatherId();
 
-                    SharedPreferences preferences = getSharedPreferences(PREFERENCES, MODE_PRIVATE);
-                    SharedPreferences.Editor editor = preferences.edit();
-                    editor.putString(KEY_WEATHER, mWeather);
-                    editor.putInt(KEY_WEATHER_ID, mWeatherId);
-                    editor.apply();
+                        SharedPreferences preferences = getSharedPreferences(PREFERENCES, MODE_PRIVATE);
+                        SharedPreferences.Editor editor = preferences.edit();
+                        editor.putString(KEY_WEATHER, mWeather);
+                        editor.putInt(KEY_WEATHER_ID, mWeatherId);
+                        editor.apply();
+                    }
                 }
+
             }
         }
 
